@@ -4,7 +4,7 @@ trigger:
     - master
 variables:
   buildConfiguration: 'Release'
-  location: 'West US 2'
+  location: 'ca-central-1'
   acrHostName: 'cswebappdocker004acr.azurecr.io'
   acrName: 'cswebappdocker004acr'
   rgName: 'cswebappdocker004-rg'
@@ -74,7 +74,7 @@ stages:
     - task: Docker@1
       displayName: 'Build container image'
       inputs:
-        azureSubscriptionEndpoint: 'AzureSC'
+        azureSubscriptionEndpoint: 'Docker-CI/CD-Demo'
         azureContainerRegistry: '$(acrHostName)'
         imageName: '$(imageName):$(Build.BuildId)'
         useDefaultContext: false
@@ -84,7 +84,7 @@ stages:
     - task: Docker@1
       displayName: 'Push container image'
       inputs:
-        azureSubscriptionEndpoint: 'AzureSC'
+        azureSubscriptionEndpoint: 'Docker-CI/CD-Demo'
         azureContainerRegistry: '$(acrHostName)'
         command: 'Push an image'
         imageName: '$(imageName):$(Build.BuildId)'
@@ -118,7 +118,7 @@ stages:
     - task: AzureResourceGroupDeployment@2
       displayName: 'Azure Deployment:Create Azure App Service'
       inputs:
-        azureSubscription: 'AzureSC'
+        azureSubscription: 'Docker-CI/CD-Demo'
         resourceGroupName: '$(rgName)'
         location: '$(location)'
         csmFile: '$(Pipeline.Workspace)/**/container-webapp-template.json'
@@ -128,7 +128,7 @@ stages:
     - task: AzureRmWebAppDeployment@3
       displayName: 'Deploy Azure App Service'
       inputs:
-        azureSubscription: 'AzureSC'
+        azureSubscription: 'Docker-CI/CD-Demo'
         appType: applinux
         WebAppName: $(webAppName)
         DockerNamespace: $(acrHostName)
